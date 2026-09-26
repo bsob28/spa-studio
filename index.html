@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f7f7f5">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SPA Studio">
+<title>SPA Studio</title>
+<style>
+:root{
+  --bg:#f7f7f5;--card:#fff;--text:#171717;--muted:#737373;--line:#e7e7e3;
+  --accent:#171717;--soft:#f0f0ec;--good:#26734d;--warn:#9a6500;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit}
+.app{max-width:760px;margin:auto;padding:22px 18px 40px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.logo{font-weight:800;font-size:21px;letter-spacing:-.5px}
+.badge{font-size:12px;background:var(--soft);padding:7px 10px;border-radius:99px;color:var(--muted)}
+h1{font-size:32px;line-height:1.08;margin:8px 0 10px;letter-spacing:-1.2px}
+h2{font-size:21px;margin:0 0 8px}
+p{line-height:1.5}
+.muted{color:var(--muted)}
+.hero{margin:8px 0 25px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.mode{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;text-align:left;cursor:pointer;min-height:145px;transition:.15s}
+.mode:active{transform:scale(.98)}
+.mode .icon{font-size:25px;margin-bottom:13px}
+.mode strong{display:block;font-size:16px;margin-bottom:5px}
+.mode span{font-size:13px;color:var(--muted);line-height:1.35}
+.mode.wide{grid-column:1/-1;min-height:auto}
+.section{margin-top:27px}
+.progress{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 5px;text-align:center}
+.stat b{display:block;font-size:17px}.stat small{font-size:9px;color:var(--muted)}
+.screen{display:none}.screen.active{display:block}
+.back{border:0;background:transparent;padding:0;margin:2px 0 18px;color:var(--muted);cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:13px}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700}
+.prompt{font-size:23px;font-weight:700;line-height:1.3;margin:10px 0 15px;letter-spacing:-.4px}
+textarea{width:100%;min-height:145px;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;resize:vertical;background:#fafaf8}
+.primary,.secondary{width:100%;border-radius:14px;padding:14px 16px;border:0;cursor:pointer;font-weight:700;margin-top:10px}
+.primary{background:var(--accent);color:white}.secondary{background:var(--soft);color:var(--text)}
+.row{display:flex;gap:9px}.row>*{flex:1}
+.mic{font-size:17px}
+.feedback{background:#f5f5f1;border-radius:15px;padding:15px;margin-top:13px;line-height:1.5}
+.feedback strong{display:block;margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.chip{background:var(--soft);border-radius:99px;padding:7px 10px;font-size:13px}
+.score{font-size:38px;font-weight:800;letter-spacing:-1px}
+.levels{display:flex;gap:7px;margin:10px 0 18px}
+.level{border:1px solid var(--line);background:white;border-radius:99px;padding:7px 12px;font-size:12px;cursor:pointer}
+.level.selected{background:#171717;color:white}
+.list{padding-left:20px;line-height:1.7}
+.notice{font-size:12px;color:var(--muted);margin-top:10px}
+.hidden{display:none!important}
+.choice{display:block;width:100%;text-align:left;background:white;border:1px solid var(--line);border-radius:13px;padding:13px;margin:8px 0;cursor:pointer}
+.choice.correct{border-color:#4c956c;background:#eef8f1}.choice.wrong{border-color:#c77b7b;background:#fff0f0}
+.timer{text-align:center;font-variant-numeric:tabular-nums;font-size:28px;font-weight:800}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+@media(max-width:520px){.modes{grid-template-columns:1fr}.mode.wide{grid-column:auto}.progress{gap:4px}.stat{padding:8px 2px}.stat small{font-size:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">SPA Studio</div><div class="badge">Self-study</div></header>
+
+<div id="home" class="screen active">
+  <div class="hero">
+    <div class="kicker">Speaking Proficiency Assessment</div>
+    <h1>Practice the skill<br>you actually need.</h1>
+    <p class="muted">Short, focused activities for stronger SPA performance.</p>
+  </div>
+
+  <div class="modes">
+    <button class="mode" onclick="start('range')"><div class="icon">🧠</div><strong>Vocabulary Range</strong><span>Use more varied vocabulary instead of repeating the same words.</span></button>
+    <button class="mode" onclick="start('precision')"><div class="icon">🎯</div><strong>Vocabulary Precision</strong><span>Choose words that communicate exactly what you mean.</span></button>
+    <button class="mode" onclick="start('listening')"><div class="icon">👂</div><strong>Listening</strong><span>Practice main ideas, details, inference and attitude.</span></button>
+    <button class="mode" onclick="start('accuracy')"><div class="icon">✓</div><strong>Grammar Accuracy</strong><span>Catch and correct common grammar errors.</span></button>
+    <button class="mode" onclick="start('complexity')"><div class="icon">↗</div><strong>Grammar Complexity</strong><span>Turn simple sentences into more sophisticated speech.</span></button>
+    <button class="mode wide" onclick="start('simulation')"><div class="icon">🎤</div><strong>Full SPA Practice</strong><span>A mixed mini-session combining vocabulary, listening and grammar.</span></button>
+  </div>
+
+  <div class="section">
+    <h2>Your progress</h2>
+    <div class="progress" id="progress"></div>
+  </div>
+</div>
+
+<div id="practice" class="screen">
+  <button class="back" onclick="goHome()">← Home</button>
+  <div id="practiceContent"></div>
+</div>
+</div>
+
+<script>
+const data={
+range:[
+ {q:"Describe a place in your city that you would recommend to a visitor.",type:"speak",tips:["Try not to repeat “good,” “nice,” or “interesting.”","Include specific nouns, adjectives and verbs."]},
+ {q:"Talk about a hobby or activity you enjoy. Explain why you enjoy it.",type:"speak",tips:["Use at least 5 different descriptive words.","Give specific examples rather than repeating general words."]},
+ {q:"Describe a memorable trip or vacation.",type:"speak",tips:["Try vocabulary for places, feelings, activities and experiences."]}
+],
+precision:[
+ {q:"Choose the most precise word: The hotel was ______ because it was close to the subway and many restaurants.",opts:["good","convenient","nice","interesting"],ans:1,why:"“Convenient” specifically describes something that makes a situation easier or more practical."},
+ {q:"Choose the most precise word: The presentation was ______, so everyone understood the complicated idea.",opts:["clear","big","nice","strong"],ans:0,why:"“Clear” precisely describes communication that is easy to understand."},
+ {q:"Choose the most precise word: The neighborhood has ______ changed over the last ten years.",opts:["a lot","significantly","good","many"],ans:1,why:"“Significantly” communicates that the change was substantial."}
+],
+listening:[
+ {text:"Many people assume that working from home is always more convenient. However, some employees say they actually spend more time working because the boundary between work and personal life becomes less clear. For them, the biggest advantage of an office is not the commute, but the separation it creates.",q:"What is the speaker's main point?",opts:["Working from home is always better.","Offices can provide useful separation between work and personal life.","Most employees prefer long commutes.","Working from home is impossible for most people."],ans:1},
+ {text:"The city originally planned to build a large parking lot near the station. After residents complained about traffic and air pollution, the city changed the plan and decided to create a public park instead.",q:"Why did the city change its plan?",opts:["The station was too small.","The project became too expensive.","Residents raised concerns about traffic and pollution.","The city needed more parking."],ans:2}
+],
+accuracy:[
+ {q:"Choose the grammatically correct sentence.",opts:["I have visited Seoul last year.","I visited Seoul last year.","I have visit Seoul last year.","I was visit Seoul last year."],ans:1,why:"Use the simple past with a finished time such as “last year.”"},
+ {q:"Choose the grammatically correct sentence.",opts:["She suggested me to take a taxi.","She suggested that I take a taxi.","She suggested me taking a taxi.","She suggested to take a taxi."],ans:1,why:"“Suggest” can be followed by a that-clause; “suggest + object + to” is not standard here."},
+ {q:"Choose the grammatically correct sentence.",opts:["There is many reasons.","There are many reasons.","There be many reasons.","There have many reasons."],ans:1,why:"“Reasons” is plural, so use “there are.”"}
+],
+complexity:[
+ {q:"Upgrade this sentence: “I like working from home.”",target:"because / although / which / whenever",example:"Although working from home can be convenient, I sometimes prefer the office because it helps me separate my work from my personal life."},
+ {q:"Upgrade this sentence: “I moved to a new city.”",target:"because / after / which / where",example:"I moved to a new city after I was offered a job there, which gave me an opportunity to experience a completely different lifestyle."},
+ {q:"Upgrade this sentence: “People use social media a lot.”",target:"while / even though / which / if",example:"Even though social media makes it easier to stay connected, people can become dependent on it if they use it without limits."}
+],
+simulation:[
+ {mode:"range",q:"Describe a place you enjoy going to and explain what makes it special.",type:"speak",tips:["Aim for 45–60 seconds.","Use varied vocabulary."]},
+ {mode:"precision",q:"Choose the most precise word: The new policy had a ______ effect on employees.",opts:["large","significant","good","nice"],ans:1,why:"“Significant” means important or substantial in effect."},
+ {mode:"accuracy",q:"Choose the grammatically correct sentence.",opts:["If I would have more time, I travel more.","If I had more time, I would travel more.","If I have more time, I would traveled more.","If I had more time, I will travel more."],ans:1,why:"This is a second conditional: if + past, would + base verb."}
+]};
+
+let state=JSON.parse(localStorage.getItem("spaStudio")||'{"range":0,"precision":0,"listening":0,"accuracy":0,"complexity":0,"simulation":0}');
+let currentMode="", currentIndex=0, recognition=null;
+
+function save(){localStorage.setItem("spaStudio",JSON.stringify(state));renderProgress()}
+function renderProgress(){
+ const names=[["range","Range"],["precision","Precision"],["listening","Listening"],["accuracy","Accuracy"],["complexity","Complexity"]];
+ document.getElementById("progress").innerHTML=names.map(([k,n])=>`<div class="stat"><b>${Math.min(state[k],99)}</b><small>${n}</small></div>`).join("");
+}
+function goHome(){document.getElementById("practice").classList.remove("active");document.getElementById("home").classList.add("active");renderProgress()}
+function start(mode){
+ currentMode=mode; currentIndex=0;
+ document.getElementById("home").classList.remove("active");document.getElementById("practice").classList.add("active");
+ renderQuestion();
+}
+function next(){currentIndex++;if(currentIndex>=data[currentMode].length){finish();}else renderQuestion()}
+function finish(){
+ const m=currentMode==="simulation"?"simulation":currentMode;
+ state[m]=Math.min(99,(state[m]||0)+1);save();
+ document.getElementById("practiceContent").innerHTML=`<div class="card" style="text-align:center"><div class="kicker">Session complete</div><h1>Nice work.</h1><p class="muted">You completed this practice set.</p><div class="score">+1</div><p>Keep practicing the same skill until it feels automatic.</p><button class="primary" onclick="goHome()">Back to home</button></div>`;
+}
+function renderQuestion(){
+ let item=data[currentMode][currentIndex];
+ if(item.mode) item={...item};
+ let modeLabel={range:"Vocabulary Range",precision:"Vocabulary Precision",listening:"Listening Comprehension",accuracy:"Grammatical Accuracy",complexity:"Grammatical Complexity",simulation:"Full SPA Practice"}[currentMode];
+ let html=`<div class="kicker">${modeLabel} · ${currentIndex+1}/${data[currentMode].length}</div>`;
+ if(item.type==="speak"){
+  html+=`<div class="card"><div class="prompt">${item.q}</div><div class="levels"><button class="level selected">45 sec</button><button class="level">60 sec</button><button class="level">90 sec</button></div><button class="primary mic" onclick="startMic()">🎤 Start speaking</button><div id="micStatus" class="notice">Your browser may ask for microphone permission.</div><textarea id="answer" placeholder="Or type your answer here..."></textarea><button class="secondary" onclick="evaluateSpeech()">Get feedback</button><div id="feedback"></div></div>`;
+ } else if(item.text){
+  html+=`<div class="card"><button class="primary" id="playBtn" onclick="playListening()">▶ Play listening</button><p class="notice">Listen once before looking at the question.</p><div id="question" class="hidden"><hr><div class="prompt">${item.q}</div>${item.opts.map((x,i)=>`<button class="choice" onclick="choose(${i},${item.ans},this,'${escapeJs(item.text)}')">${x}</button>`).join("")}<div id="feedback"></div></div></div>`;
+ } else if(item.opts){
+  html+=`<div class="card"><div class="prompt">${item.q}</div>${item.opts.map((x,i)=>`<button class="choice" onclick="choose(${i},${item.ans},this,'')">${x}</button>`).join("")}<div id="feedback"></div></div>`;
+ } else {
+  html+=`<div class="card"><div class="prompt">${item.q}</div><div class="notice"><b>Try to use:</b> ${item.target}</div><textarea id="answer" placeholder="Say your upgraded sentence here, or type it..."></textarea><button class="primary mic" onclick="startMic()">🎤 Start speaking</button><button class="secondary" onclick="showComplexity()">Get feedback</button><div id="feedback"></div></div>`;
+ }
+ document.getElementById("practiceContent").innerHTML=html;
+}
+function escapeJs(s){return s.replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g," ")}
+function choose(i,ans,el,txt){
+ document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+ const fb=document.getElementById("feedback");
+ if(i===ans){el.classList.add("correct");state[currentMode]=(state[currentMode]||0)+1;save();fb.innerHTML=`<div class="feedback"><strong>✓ Correct</strong>${currentMode==="listening"?"You identified the key information accurately.":"Good choice. "+(data[currentMode][currentIndex].why||"")}</div><button class="primary" onclick="next()">Next →</button>`}
+ else{el.classList.add("wrong");fb.innerHTML=`<div class="feedback"><strong>Not quite.</strong>The best answer is <b>${data[currentMode][currentIndex].opts[ans]}</b>.<br>${data[currentMode][currentIndex].why||"Listen for the key detail and try again."}</div><button class="primary" onclick="next()">Next →</button>`}
+}
+function playListening(){
+ const item=data[currentMode][currentIndex];
+ if("speechSynthesis" in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(item.text);u.rate=.88;u.onend=()=>document.getElementById("question").classList.remove("hidden");speechSynthesis.speak(u)}
+ else document.getElementById("question").classList.remove("hidden");
+}
+function startMic(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){document.getElementById("micStatus").textContent="Voice input isn't supported in this browser. You can type your answer instead.";return}
+ recognition=new SR();recognition.lang="en-US";recognition.interimResults=true;recognition.continuous=false;
+ const box=document.getElementById("answer");const status=document.getElementById("micStatus");
+ status.textContent="🎙 Listening… speak naturally.";
+ recognition.onresult=e=>{box.value=Array.from(e.results).map(r=>r[0].transcript).join(" ")}
+ recognition.onerror=()=>status.textContent="Couldn't access the microphone. Try typing your answer.";
+ recognition.onend=()=>status.textContent="Done. Read your answer, then tap Get feedback.";
+ recognition.start();
+}
+function evaluateSpeech(){
+ const text=(document.getElementById("answer")?.value||"").trim();
+ const item=data[currentMode][currentIndex];
+ if(!text){document.getElementById("feedback").innerHTML='<div class="feedback"><strong>Try speaking first.</strong>Record or type a response so you can review it.</div>';return}
+ const words=text.toLowerCase().match(/[a-z]+/g)||[];
+ const unique=new Set(words);
+ let html="";
+ if(currentMode==="range"){
+   const repeated=words.length?Math.round((1-unique.size/words.length)*100):0;
+   html=`<div class="feedback"><strong>Your vocabulary snapshot</strong>${words.length} words · ${unique.size} different words · ${repeated}% repetition<br><br>${item.tips.map(x=>"• "+x).join("<br>")}<div class="chips"><span class="chip">Try specific verbs</span><span class="chip">Add descriptive adjectives</span><span class="chip">Avoid repeating “good” / “nice”</span></div></div>`;
+ }else{
+   html=`<div class="feedback"><strong>Self-check</strong>Look at your response. Did you use the target structure? Could you combine two ideas with a connector? Then try it once more with a longer, more natural sentence.</div>`;
+ }
+ state[currentMode]=(state[currentMode]||0)+1;save();
+ document.getElementById("feedback").innerHTML=html+'<button class="primary" onclick="next()">Next →</button>';
+}
+function showComplexity(){
+ const item=data[currentMode][currentIndex];
+ const text=(document.getElementById("answer")?.value||"").trim();
+ const hasConnector=/\b(although|because|while|which|whenever|after|before|even though|if|since|unless|where)\b/i.test(text);
+ document.getElementById("feedback").innerHTML=`<div class="feedback"><strong>${hasConnector?"✓ You used a connecting structure.":"Try adding a connecting structure."}</strong>${hasConnector?"Good—now make the relationship between your ideas clear.":"Try: "+item.target+"."}<br><br><b>Example:</b> ${item.example}</div><button class="primary" onclick="next()">Next →</button>`;
+ state[currentMode]=(state[currentMode]||0)+1;save();
+}
+renderProgress();
+</script>
+</body>
+</html>
