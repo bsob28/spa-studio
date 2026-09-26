@@ -1,0 +1,9 @@
+{
+  "name": "SPA Studio",
+  "short_name": "SPA Studio",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#f7f7f5",
+  "description": "Self-study practice for Speaking Proficiency Assessment skills."
+}
